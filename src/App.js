@@ -9,54 +9,67 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [
-        {
-          label: 'Task 1',
-          id: uuid.v4(),
-          state: ''
-        },
-        {
-          label: 'Task 2',
-          id: uuid.v4(),
-          state: ''
-        },
-        {
-          label: 'Task 3',
-          id: uuid.v4(),
-          state: ''
-        },
-      ],
-      filters: 'all'
+      tasks: [],
+      filters: ''
     }
   }
 
-  makeAllTaskCompleted() {
+  makeAllTaskCompleted = () => {
     console.log('make all task completed')
   }
 
-  createTask(label) {
+  createTask = (label) => {
     const task = {
       label,
-      id: uuid,
+      id: uuid.v4(),
       state: ''
     }
 
-    this.setState((preState, props) => ({
-      tasks: 
+    this.setState((preState) => ({
+      tasks: preState.tasks.concat(task)
+    }))
+  }
+
+  deletedTask = (taskID) => {
+    this.setState((preState) => ({
+      tasks: preState.tasks.filter((task) => task.id !== taskID)
+    }))
+  }
+
+  filterItems = (state) => {
+    return this.state.tasks.filter((task) => {
+      return task.state === state
+    })
+  }
+
+  updateTask = (taskEdited) => {
+    this.setState((preState) => ({
+      task: preState.map((task) => {
+        if (task.id !== taskEdited) return task;
+        return taskEdited;
+      })
     }))
   }
 
   render() {
+    const itemsActive = this.filterItems('');
+    const itemsCompleted = this.filterItems('completed');
+
     return (
       <div className="App">
         <section className="todoapp">
-          <TodoHeader></TodoHeader>
+          <TodoHeader createTask={this.createTask}></TodoHeader>
           <section className="main">
             <input className="toggle-all" type="checkbox"/>
-            <TodoTasks tasks={this.state.tasks}></TodoTasks>
+            <TodoTasks 
+              tasks={this.state.tasks}
+              deletedTask={this.deletedTask}
+              updateTask={this.updateTask}
+            >
+            </TodoTasks>
           </section>
           <footer className="footer">
-            <TodoCounter></TodoCounter>
+            <TodoCounter itemsLeft={itemsActive.length}></TodoCounter>
             <TodoFilters></TodoFilters>
             <button onClick={this.makeAllTaskCompleted} className="clear-completed">Clear completed</button>
           </footer>

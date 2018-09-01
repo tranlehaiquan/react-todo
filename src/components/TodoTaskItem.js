@@ -6,10 +6,13 @@ export default class TodoTaskItem extends Component {
       <li className="">
         <div className="view">
           <input className="toggle" type="checkbox"/>
-          <label>{ this.props.task }</label>
-          <button className="destroy"></button>
+          <label>{ this.props.task.label }</label>
+          <button 
+            className="destroy"
+            onClick={() => this.props.deletedTask(this.props.task.id)}
+          ></button>
         </div>
-        <input className="edit" defaultValue={this.props.task}/>
+        <input className="edit" defaultValue={this.props.task.label}/>
       </li>
     )
   }
