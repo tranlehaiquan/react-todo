@@ -16,6 +16,7 @@ export default class TodoInput extends Component {
 
   handleOnPress = (event) => {
     if (event.key === "Enter") {
+      if (!this.state.task) return;
       this.addNewTask();
       this.clearInputTask()
     }
